@@ -1,0 +1,23 @@
+# humanstxt.org/
+#
+/* TEAM */
+
+
+Name: Robert Walker
+Role: Designer/Programmer
+Location: Maryland
+
+/* THANKS */
+
+ 
+   
+
+/* SITE */
+Last Update: 10/22/2013
+
+
+Standards: HTML5, CSS3
+
+Componets: Normalize.css, jQuery, Modernizr
+
+Software: Aptana Studio 3

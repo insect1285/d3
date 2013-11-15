@@ -1,0 +1,506 @@
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+html {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/*
+ * Remove the gap between images, videos, audio and canvas and the bottom of
+ * their containers: h5bp.com/i/440
+ */
+
+audio,
+canvas,
+img,
+video {
+    vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Browse Happy prompt
+   ========================================================================== */
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+::-webkit-scrollbar{
+    width:0.8em;
+    height:0.8em;
+    background-color:#fff;
+}
+::-webkit-scrollbar:hover{
+    background-color:#eee;
+}
+::-webkit-resizer{
+    -webkit-border-radius:4px;
+    background-color:#666;
+}
+::-webkit-scrollbar-thumb{
+    min-height:0.8em;
+    min-width:0.8em;
+    background-color: #bbb;
+}
+::-webkit-scrollbar-thumb:hover{
+    background-color: #aaa;
+}
+::-webkit-scrollbar-thumb:active{
+    background-color:#888;
+}
+
+html{
+	height:100%;
+	width:100%;
+	overflow:hidden;
+}
+header{
+	height:5%;
+	width:100%;
+	min-width:500px;
+	min-height:80px;
+	background: -webkit-linear-gradient(left, #0066CC , white); /* For Safari */
+	background: -o-linear-gradient(right, #0066CC, white); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(right, #0066CC, white); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(to right, #0066CC, white); /* Standard syntax */
+}
+header span{
+	vertical-align: middle;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+body{
+	height:100%;
+	width:100%;
+	min-height: 500px;
+	min-width: 500px;
+	background:white;
+}
+#wrapper{
+	min-height:100%;
+	position: relative;
+}
+#main{
+	margin-left:20px;
+	height: 80%;
+	width:100%;
+	position: fixed;
+	overflow: auto;
+}
+
+.footer {
+	height: 50px;
+	width: 100%;
+    padding: 0;
+    bottom: 0;
+    background: -webkit-linear-gradient(right, #0066CC , white); /* For Safari */
+	background: -o-linear-gradient(left, #0066CC, white); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(left, #0066CC, white); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(to left, #0066CC, white); /* Standard syntax */
+	margin-right:20px;
+	position:fixed;
+}
+.link{
+	background:none;
+	color:white;
+	margin-left: 20px;
+}
+.mlink{
+	padding: 10px;
+	margin:0;
+	border: 1px solid black;
+	background:#0066CC;
+	color:white;
+	font-weight: bold;
+	text-align: center;	
+	cursor: pointer;	
+}
+p.mlink:hover{
+	background-color: #0099FF;
+}
+
+#fUpload,.error,.success,#code{
+	margin-left: 20px;
+}
+
+#overlay {
+    position   : absolute;
+    top        : 0;
+    left       : 0;
+    width      : 100%;
+    height     : 100%;
+    background : #000;
+    opacity    : 0.6;
+    filter     : alpha(opacity=60);
+    z-index    : 5;
+    display    : none;
+}
+
+#overlayOptions {
+    position : absolute;
+    top      : 25%;
+    left     : 25%;
+    width    : 50%;
+    height   : 50%;
+    z-index  : 10;
+    display  : none;
+    background:white;
+    border: 2px solid black;
+    overflow:auto;
+} 
+
+#close-btn {
+  position: absolute;
+  width: 40px;
+  height:40px;
+  top: 0px;
+  left: 95%;
+  cursor: pointer;
+  z-index:220;
+}
+
+.error{
+	color:red;
+}
+
+.success{
+	color:blue;
+}
+
+.data{
+	margin-left: 20px;
+	margin-right: 40px;
+	border: 1px solid black;
+	height: 100px;
+	overflow:auto;
+}
+
+table,th,td{
+	border: 1px solid grey;
+	padding:2px;
+}
+
+th{
+	text-decoration: underline;
+	background:#0066CC;
+}
+
+.choice{
+	margin-left:20px;
+	margin-right:20px;	
+}
+
+.cOptions{
+	padding-left:20px;
+	font-weight:bold;
+}
+
+.cChoice{
+	padding-left:20px;
+	font-weight:normal;
+}
+
+svg {
+  font: 10px sans-serif;
+  padding:20px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+
+.domain{
+	stroke-width: 2px;
+}
+
+.line {
+  fill: none;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Image replacement
+ */
+
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    /* IE 6/7 fallback */
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+
