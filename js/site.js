@@ -20,28 +20,39 @@ var symXY2 = null;
 var context = null;
 var brush = null;
 var focus = null;
-var fColor = 'black'; //color for chart
-var sColor = 'black'; //color for chart
-var marker = "";
+//All options that affect chart/symbol appearances
+var chartOptions = { 
+	fColor: 'black', //fill color for chart
+	sColor: 'black', //stroke color for chart
+	marker: "circle",
+	markerSize: 75	
+};
+//All options that affect axis appearances/labels
+var axisOptions = {
+	xlbl: "", //x/y axis label
+	ylbl: "",	
+	ylblp: "", //x/y lable position (left, middle, right/Top, center, bottom)
+	xlblp: "",
+	ylblfs: "1", //x/y label font size
+	xlblfs: "1",
+	ylblrot: "Yes", //x/y label rotate 90 deg.
+	xlblrot: "No",
+	xMinVal: null, //x/y label mix/max values
+	xMaxVal: null,
+	yMinVal: null,
+	yMaxVal: null
+};
+
 var cX = null;
 var cY = null;
 var height = null;
 var height2 = null;
 var strData = null;
-var xlbl = "";
-var ylbl = "";
-var ylblp = "";
-var xlblp = "";
-var ylblfs = "1";
-var xlblfs = "1";
-var ylblrot = "Yes";
-var xlblrot = "No";
-var yMinVal = null;
-var yMaxVal = null;
+
 var xValType = "";
 var yValType = "";
-var xValTypeChanged = 0; //track when data type changes in order to reset min/max; 0 = unchanged
-var yValTypeChanged = 0;
+var xValTypeChanged = false; //track when data type changes in order to reset min/max
+var yValTypeChanged = false;
 //RegEx for date validation
 //var dateRE = "^((((0[13578])|([13578])|(1[02]))[\/](([1-9])|([0-2][0-9])|(3[01])))|(((0[469])|([469])|(11))[\/](([1-9])|([0-2][0-9])|(30)))|((2|02)[\/](([1-9])|([0-2][0-9]))))[\/]\d{4}$|^\d{4}$";
 
@@ -129,7 +140,7 @@ function featureOptions(chartType){
 	var markers = d3.svg.symbolTypes;
 	var markerOptions ='';
 	for (var k = 0; k<markers.length; k++){
-				if(marker == markers[k]){
+				if(chartOptions.marker == markers[k]){
 					markerOptions += '<option selected>'+markers[k].charAt(0).toUpperCase() + markers[k].slice(1)+'</option>';
 				} else {
 					markerOptions += '<option>'+markers[k].charAt(0).toUpperCase() + markers[k].slice(1)+'</option>';
@@ -167,12 +178,15 @@ function changeLT(){
 }
 function changeMarker(){
 	if($('#markerType').val()){
-		marker = $('#markerType').val();
+		chartOptions.marker = $('#markerType').val();
 	}
-	marker = marker.charAt(0).toLowerCase() + marker.slice(1);
+	if($('#markerSize').val()){
+		chartOptions.markerSize = $('#markerSize').val();
+	}
+	chartOptions.marker = chartOptions.marker.charAt(0).toLowerCase() + chartOptions.marker.slice(1);
 	sym = d3.svg.symbol()
-			.type(marker)
-			.size($('#markerSize').val());
+			.type(chartOptions.marker)
+			.size(chartOptions.markerSize);
 	focus.selectAll("#scatter")
 		.attr("d",sym);
 	context.selectAll("#scatter")
@@ -190,35 +204,35 @@ function xaxisOptions(){
 	$('#overlayOptions').append('<h3>Horizontal Axis Options</h3><img id="close-btn" onClick="overlayClose()" src="images/close-button-blue-md.png" width="40px" height="40px" alt="Close" title="Close" />'); //close button
 	
 	//Axis Labels
-	$('#overlayOptions').append('<p class="cChoice">Label: <input id="xlabel" onchange="changeXAL()" value="'+xlbl+'"></input></p>');
+	$('#overlayOptions').append('<p class="cChoice">Label: <input id="xlabel" onchange="changeXAL()" value="'+axisOptions.xlbl+'"></input></p>');
 	var sel = '';
-	if(xlblrot == "No"){
+	if(axisOptions.xlblrot == "No"){
 		sel = '<option>Yes</option><option selected>No</option>';	
 	} else {
 		sel = '<option selected>Yes</option><option>No</option>';
 	}
 	$('#overlayOptions').append('<p class="cChoice">Rotate Label: <select id="xlabelrot" onchange="changeXAL()">'+sel+'</select></p>');	
-	if(xlblp == "Left"){
+	if(axisOptions.xlblp == "Left"){
 		sel = '<option selected>Left</option><option>Center</option><option>Right</option>';
-	} else if(xlblp == "Center"){
+	} else if(axisOptions.xlblp == "Center"){
 		sel = '<option>Left</option><option selected>Center</option><option>Right</option>';
 	} else {
 		sel = '<option>Left</option><option>Center</option><option selected>Right</option>';
 	}
 	$('#overlayOptions').append('<p class="cChoice">Label Position: <select id="xlabelpos" onchange="changeXAL()">'+sel+'</select></p>');
-	$('#overlayOptions').append('<p class="cChoice">Label Size: <input id="xlabelfs" onchange="changeXAL()" value="'+xlblfs+'"></input></p>');
+	$('#overlayOptions').append('<p class="cChoice">Label Size: <input id="xlabelfs" onchange="changeXAL()" value="'+axisOptions.xlblfs+'"></input></p>');
 	//Axis Scale - Start with Default
 	if (xValType != "string"){
-		if(xValTypeChanged == 1){
-			xMinVal = d3.min(data.map(function(d){return d.x;}));
-			xMaxVal = d3.max(data.map(function(d){return d.x;}));
+		if(xValTypeChanged == true){
+			axisOptions.xMinVal = d3.min(data.map(function(d){return d.x;}));
+			axisOptions.xMaxVal = d3.max(data.map(function(d){return d.x;}));
 		}
 		if (xValType == "date"){	
-			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="xmin" type="date" onchange="changeXAL()" value="' + xMinVal.toString('yyyy-MM-dd') + '"></input></p>');
-			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="xmax" type="date" onchange="changeXAL()" value="' + xMaxVal.toString('yyyy-MM-dd') + '"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="xmin" type="date" onchange="changeXAL()" value="' + axisOptions.xMinVal.toString('yyyy-MM-dd') + '"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="xmax" type="date" onchange="changeXAL()" value="' + axisOptions.xMaxVal.toString('yyyy-MM-dd') + '"></input></p>');
 		} else {
-			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="xmin" onchange="changeXAL()" value="'+xMinVal+'"></input></p>');
-			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="xmax" onchange="changeXAL()" value="'+xMaxVal+'"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="xmin" onchange="changeXAL()" value="'+axisOptions.xMinVal+'"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="xmax" onchange="changeXAL()" value="'+axisOptions.xMaxVal+'"></input></p>');
 		}
 	}
 	//Axis Color
@@ -236,35 +250,35 @@ function yaxisOptions(){
 	$('#overlayOptions').append('<h3>Veritcal Axis Options</h3><img id="close-btn" onClick="overlayClose()" src="images/close-button-blue-md.png" width="40px" height="40px" alt="Close" title="Close" />');
 	
 	//Axis Labels
-	$('#overlayOptions').append('<p class="cChoice">Label: <input id="ylabel" onchange="changeYAL()" value="'+ylbl+'"></input></p>');
+	$('#overlayOptions').append('<p class="cChoice">Label: <input id="ylabel" onchange="changeYAL()" value="'+axisOptions.ylbl+'"></input></p>');
 	var sel = '';
-	if(ylblrot == "No"){
+	if(axisOptions.ylblrot == "No"){
 		sel = '<option>Yes</option><option selected>No</option>';	
 	} else {
 		sel = '<option selected>Yes</option><option>No</option>';
 	}
 	$('#overlayOptions').append('<p class="cChoice">Rotate Label: <select id="ylabelrot" onchange="changeYAL()">'+sel+'</select></p>');	
-	if(ylblp == "Top"){
+	if(axisOptions.ylblp == "Top"){
 		sel = '<option selected>Top</option><option>Middle</option><option>Bottom</option>';
-	} else if(ylblp == "Middle"){
+	} else if(axisOptions.ylblp == "Middle"){
 		sel = '<option>Top</option><option selected>Middle</option><option>Bottom</option>';
 	} else {
 		sel = '<option>Top</option><option>Middle</option><option selected>Bottom</option>';
 	}
 	$('#overlayOptions').append('<p class="cChoice">Label Position: <select id="ylabelpos" onchange="changeYAL()">'+sel+'</select></p>');
-	$('#overlayOptions').append('<p class="cChoice">Label Size: <input id="ylabelfs" onchange="changeYAL()" value="'+ylblfs+'"></input></p>');
+	$('#overlayOptions').append('<p class="cChoice">Label Size: <input id="ylabelfs" onchange="changeYAL()" value="'+axisOptions.ylblfs+'"></input></p>');
 	//Axis Scale - Start with Default
 	if (yValType != "string"){	
-		if(yValTypeChanged == 1){
-			yMinVal = d3.min(data.map(function(d){return d.y;}));
-			yMaxVal = d3.max(data.map(function(d){return d.y;}));
+		if(yValTypeChanged == true){
+			axisOptions.yMinVal = d3.min(data.map(function(d){return d.y;}));
+			axisOptions.yMaxVal = d3.max(data.map(function(d){return d.y;}));
 		}
 		if (yValType == "date"){						
-			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="ymin" type="date" onchange="changeYAL()" value="' + yMinVal.toString('yyyy-MM-dd') + '"></input></p>');
-			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="ymax" type="date" onchange="changeYAL()" value="' + yMaxVal.toString('yyyy-MM-dd') + '"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="ymin" type="date" onchange="changeYAL()" value="' + axisOptions.yMinVal.toString('yyyy-MM-dd') + '"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="ymax" type="date" onchange="changeYAL()" value="' + axisOptions.yMaxVal.toString('yyyy-MM-dd') + '"></input></p>');
 		} else {
-			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="ymin" onchange="changeYAL()" value="'+yMinVal+'"></input></p>');
-			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="ymax" onchange="changeYAL()" value="'+yMaxVal+'"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Min: <input id="ymin" onchange="changeYAL()" value="'+axisOptions.yMinVal+'"></input></p>');
+			$('#overlayOptions').append('<p class="cChoice">Scale Max: <input id="ymax" onchange="changeYAL()" value="'+axisOptions.yMaxVal+'"></input></p>');
 		}
 	}
 	//Axis Color
@@ -278,16 +292,16 @@ function yaxisOptions(){
 function changeXAL(){
 	focus.select('#xlbl').remove();
 	if($('#xlabel').val()){
-		xlbl = $('#xlabel').val();
+		axisOptions.xlbl = $('#xlabel').val();
 	}
 	if($('#xlabelpos').val()){
-		xlblp = $('#xlabelpos').val();
+		axisOptions.xlblp = $('#xlabelpos').val();
 	}
 	if($('#xlabelfs').val()){
-		xlblfs = $('#xlabelfs').val();
+		axisOptions.xlblfs = $('#xlabelfs').val();
 	}
 	if($('#xlabelrot').val()){
-		xlblrot = $('#xlabelrot').val();
+		axisOptions.xlblrot = $('#xlabelrot').val();
 	}
 	//Only adjust min/max of axis if numbers or dates
 	if(xValType != "string"){
@@ -295,28 +309,28 @@ function changeXAL(){
 		if(xValType == "date")
 		{
 			if($('#xmin').val()){
-				xMinVal = Date.parse($('#xmin').val());
+				axisOptions.xMinVal = Date.parse($('#xmin').val());
 			} else {
-				xMinVal = xDom[0];	
+				axisOptions.xMinVal = xDom[0];	
 			}
 			if($('#xmax').val()){
-				xMaxVal = Date.parse($('#xmax').val());
+				axisOptions.xMaxVal = Date.parse($('#xmax').val());
 			} else {		
-				xMaxVal = xDom[1];	
+				axisOptions.xMaxVal = xDom[1];	
 			}
 		} else {		
 			if($('#xmin').val()){
-				xMinVal = $('#xmin').val();
+				axisOptions.xMinVal = $('#xmin').val();
 			} else {
-				xMinVal = xDom[0];	
+				axisOptions.xMinVal = xDom[0];	
 			}
 			if($('#xmax').val()){
-				xMaxVal = $('#xmax').val();
+				axisOptions.xMaxVal = $('#xmax').val();
 			} else {		
-				xMaxVal = xDom[1];	
+				axisOptions.xMaxVal = xDom[1];	
 			}
 		}
-		x.domain([xMinVal,xMaxVal]);
+		x.domain([axisOptions.xMinVal,axisOptions.xMaxVal]);
 		x2.domain(x.domain());
 	}
 	switch ($('#cOption').val()) {
@@ -335,7 +349,7 @@ function changeXAL(){
 	}
 	var xRange = x.range();
 	var xpos='';
-	switch (xlblp){
+	switch (axisOptions.xlblp){
 		case "Left":
 			xpos=xRange[0];
 			break;
@@ -350,14 +364,14 @@ function changeXAL(){
 		.call(xAxis)
 		.call(xAxis2)
 		.append("text")
-		.attr("font-size",xlblfs+"em")
+		.attr("font-size",axisOptions.xlblfs+"em")
 		.attr("id","xlbl")		
       	.attr("x", xpos)
       	.attr("dy", "35")
       	//.attr("text-anchor", "middle")
-      	.text(xlbl); 
-      	 
-   if($('#xlabelrot').val() == 'Yes'){
+      	.text(axisOptions.xlbl); 
+          	 
+   if(axisOptions.xlblrot == 'Yes'){
    		focus.select('#xlbl')
 	   		.attr("y",-xpos)
 	   		.attr("y",0)
@@ -369,16 +383,16 @@ function changeXAL(){
 function changeYAL(){
 	focus.select('#ylbl').remove();
 	if($('#ylabel').val()){
-		ylbl = $('#ylabel').val();
+		axisOptions.ylbl = $('#ylabel').val();
 	}
 	if($('#ylabelpos').val()){
-		ylblp = $('#ylabelpos').val();
+		axisOptions.ylblp = $('#ylabelpos').val();
 	}
 	if($('#ylabelfs').val()){
-		ylblfs = $('#ylabelfs').val();
+		axisOptions.ylblfs = $('#ylabelfs').val();
 	}
 	if($('#ylabelrot').val()){
-		ylblrot = $('#ylabelrot').val();
+		axisOptions.ylblrot = $('#ylabelrot').val();
 	}
 	//Adjust yaxis min/max if numbers or dates only
 	if (yValType != "string"){
@@ -386,28 +400,28 @@ function changeYAL(){
 		if(yValType == "date")
 		{
 			if($('#ymin').val()){
-				yMinVal = Date.parse($('#ymin').val());
+				axisOptions.yMinVal = Date.parse($('#ymin').val());
 			} else {
-				yMinVal = yDom[0];	
+				axisOptions.yMinVal = yDom[0];	
 			}
 			if($('#ymax').val()){
-				yMaxVal = Date.parse($('#ymax').val());
+				axisOptions.yMaxVal = Date.parse($('#ymax').val());
 			} else {		
-				yMaxVal = yDom[1];	
+				axisOptions.yMaxVal = yDom[1];	
 			}
 		} else {		
 			if($('#ymin').val()){
-				yMinVal = $('#ymin').val();
+				axisOptions.yMinVal = $('#ymin').val();
 			} else {
-				yMinVal = yDom[0];	
+				axisOptions.yMinVal = yDom[0];	
 			}
 			if($('#ymax').val()){
-				yMaxVal = $('#ymax').val();
+				axisOptions.yMaxVal = $('#ymax').val();
 			} else {		
-				yMaxVal = yDom[1];	
+				axisOptions.yMaxVal = yDom[1];	
 			}
 		}
-		y.domain([yMinVal,yMaxVal]);
+		y.domain([axisOptions.yMinVal,axisOptions.yMaxVal]);
 		y2.domain(y.domain());
 	}
 	switch ($('#cOption').val()) {
@@ -427,7 +441,7 @@ function changeYAL(){
 	  }
 	var yRange = y.range();
 	var ypos='';
-	switch (ylblp){
+	switch (axisOptions.ylblp){
 		case "Bottom":
 			ypos=yRange[0];
 			break;
@@ -441,14 +455,14 @@ function changeYAL(){
 	focus.select('#yaxis')
 		.call(yAxis)
 		.append("text")
-		.attr("font-size",ylblfs+"em")
+		.attr("font-size",axisOptions.ylblfs+"em")
 		.attr("id","ylbl")		
       	.attr("y", ypos)
       	.attr("dx", "-"+$('#ylabel').val().length+"em")
       	//.attr("text-anchor", "middle")
-      	.text(ylbl); 
+      	.text(axisOptions.ylbl); 
       	 
-   if($('#ylabelrot').val() == 'Yes'){
+   if(axisOptions.ylblrot == 'Yes'){
    		focus.select('#ylbl')
 	   		.attr("x",-ypos)
 	   		.attr("y",0)
@@ -460,8 +474,8 @@ function changeYAL(){
 
 function colorChoice(cPart, type){
 	var lbl = cPart.substring(1,cPart.indexOf('Color'));
-	var iColor = fColor;
-	if (lbl == 'stroke'){lbl = "line"; iColor = sColor;}
+	var iColor = chartOptions.fColor;
+	if (lbl == 'stroke'){lbl = "line"; iColor = chartOptions.sColor;}
 	lbl = lbl.charAt(0).toUpperCase() + lbl.slice(1);
 	$(cPart).append('<div class="cChoice">'+lbl+' Color: '+
 		'<input id="chartColor'+cPart.substring(1)+'" type="text" ></div>');
@@ -471,35 +485,35 @@ function colorChoice(cPart, type){
 	    showButtons: false,
 	    change: function(){
 		    		//set Color variable
-		    		fColor = $('#chartColorfillColor').spectrum("get");
-		    		sColor = $('#chartColorstrokeColor').spectrum("get");
+		    		chartOptions.fColor = $('#chartColorfillColor').spectrum("get");
+		    		chartOptions.sColor = $('#chartColorstrokeColor').spectrum("get");
 		    		//Recreate data polygons
 		    		switch(type){
 		    			case 'Fill':
 		    				focus.selectAll("path")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 							context.selectAll("path")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 							focus.selectAll("rect")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 							context.selectAll("rect")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 		    				break;
 	    				case 'Line':
 	    					focus.selectAll("path")
-								.attr("stroke",sColor);
+								.attr("stroke",chartOptions.sColor);
 							context.selectAll("path")
-								.attr("stroke",sColor);
+								.attr("stroke",chartOptions.sColor);
 	    					break;
 	    				case 'Marker':
 	    					focus.selectAll("path")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 							focus.selectAll("path")
-								.attr("stroke",sColor);
+								.attr("stroke",chartOptions.sColor);
 							context.selectAll("path")
-								.attr("fill",fColor);
+								.attr("fill",chartOptions.fColor);
 							context.selectAll("path")
-								.attr("stroke",sColor);
+								.attr("stroke",chartOptions.sColor);
 	    					break;
 		    		};
 		    		//Used to reset entire chart (inefficient, but might be necessary in extreme cases)
@@ -520,11 +534,11 @@ function resetChart(){
 function createSVG(){
 	//Dimensional Variables
 	var margin = {top: 10, right: 10, bottom: 100, left: 40},
-	    margin2 = {top: $(window).height()*.4, right: 10, bottom: 20, left: 40},
-	    width = $(window).width()*.8 - margin.left - margin.right;
+	    margin2 = {top: 430, right: 10, bottom: 20, left: 40},
+	    width = 500 - margin.left - margin.right;
 	    
-    height = $(window).height()*.5 - margin.top - margin.bottom;
-    height2 = $(window).height()*.5 - margin2.top - margin2.bottom;
+    height = 500 - margin.top - margin.bottom;
+    height2 = 500 - margin2.top - margin2.bottom;
     
 	//Add SVG with chart    
 	svg = d3.selectAll("#chart").append("svg")
@@ -776,7 +790,7 @@ function createBarChart(){
       .data(data)
       .enter().append("rect")
       .attr("clip-path", "url(#clip)")
-      .attr("fill", fColor)
+      .attr("fill", chartOptions.fColor)
       .attr("x", function(d) { return x(d.x); })
       .attr("width", 25)
       .attr("y", function(d) { return y(d.y); })
@@ -789,7 +803,7 @@ function createBarChart(){
   context.selectAll("rect")
       .data(data)
       .enter().append("rect")
-      .attr("fill", fColor)
+      .attr("fill", chartOptions.fColor)
       .attr("x", function(d) { return x2(d.x); })
       .attr("width", 25)
       .attr("y", function(d) { return y2(d.y); })
@@ -816,7 +830,7 @@ function createFilledLineChart(){
 	      .attr("clip-path", "url(#clip)")
 	      .attr("id","fill")
 	      .attr("d", area)
-	      .attr("fill",fColor)
+	      .attr("fill",chartOptions.fColor)
 	      .on("dblclick", function(){
 	      	createPopupOptions();
 	      	featureOptions('Filled');
@@ -825,8 +839,9 @@ function createFilledLineChart(){
 	  context.append("path")
 	      .datum(data)
 	      .attr("id","fill")
-	      .attr("d", area2)
-	      .attr("fill",fColor);
+	      //.attr("fill",chartOptions.fColor)
+	      .attr("d", area2);
+	      
 	  
 	  //Add Brush after secondary plot is finished or cursor doesn't funtion when mousing over data
 	  //Refreshes axis to get scale based on data
@@ -849,7 +864,7 @@ function createLineChart(){
 	      .attr("d", line)
 	      .attr("id","line")
 	      .attr("stroke-width",4)
-	      .attr("stroke", sColor)
+	      .attr("stroke", chartOptions.sColor)
 	      .attr("fill","none")
 	      .on("dblclick", function(){
 	      	createPopupOptions();
@@ -861,8 +876,9 @@ function createLineChart(){
 	      .attr("id","line")
 	      .attr("d", line2)
 	      .attr("stroke-width",2)
-	      .attr("fill","none")
-	      .attr("stroke", sColor);
+	      .attr("stroke", chartOptions.sColor)
+	      .attr("fill","none");
+	      
 	  
 	  //Add Brush after secondary plot is finished or cursor doesn't funtion when mousing over data
 	  //Refreshes axis to get scale based on data
@@ -873,8 +889,8 @@ function createLineChart(){
 function createScatter(){
 	
 	sym = d3.svg.symbol()
-			.type("circle")
-			.size(75);
+			.type(chartOptions.marker)
+			.size(chartOptions.markerSize);
 	
 	symXY = function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; };
 	
@@ -886,9 +902,9 @@ function createScatter(){
   	  .attr("id","scatter")
       .attr("transform", symXY)
       .attr("d", sym)
-      .attr("stroke", sColor)
+      .attr("stroke", chartOptions.sColor)
       .attr("stroke-width",4)
-      .attr("fill",fColor)
+      .attr("fill",chartOptions.fColor)
       .on("dblclick", function(){
       	createPopupOptions();
       	featureOptions('Scatter');
@@ -900,9 +916,10 @@ function createScatter(){
   	  .attr("id","scatter")
       .attr("transform", symXY2)
       .attr("d", sym)
-      .attr("stroke", sColor)
-      .attr("stroke-width",2)
-      .attr("fill",fColor);
+      .attr("fill",chartOptions.fColor)
+      .attr("stroke", chartOptions.sColor)      
+      .attr("stroke-width",2);
+      
       
       addons();
 }

@@ -48,11 +48,9 @@
     	<div id="content">
 		    <div id="main">
 		    	<div id="dData">
-		    		<div id="fUpload">
+		    		<div id="fUpload">		    			
 						<?php echo upload_form(); 
-							if (isset($_POST['submit'])) {
-					    		echo upload_file($_FILES);
-							}
+							
 						?>
 					</div>
 					<div id="dataTitle"> </div>
@@ -74,7 +72,8 @@
 		</div>
 	</div>
 </body>
-<!--CHANGE UA-XXXX to my site ID -->
+
+<!--CHANGE UA-XXXX to my site ID 
 <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -82,5 +81,5 @@
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
-</script>
+</script>-->
 </html>
