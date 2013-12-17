@@ -148,6 +148,9 @@ body{
 	min-width: 500px;
 	background:white;
 }
+label.inline{
+	display: inline-block; width: 120px; text-align: right; 
+}
 #wrapper{
 	min-height:100%;
 	position: relative;

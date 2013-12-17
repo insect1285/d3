@@ -2,7 +2,6 @@
 require 'error.php';
 //Delete all files older than one day that were previously uploaded
 function upload_file($file){
-	
 	$files = glob('temp/*'); // get all file names
 	foreach($files as $f){ // iterate files
 	  if(is_file($f))
