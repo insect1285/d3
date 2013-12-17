@@ -25,8 +25,12 @@ var chartOptions = {
 	fColor: 'black', //fill color for chart
 	sColor: 'black', //stroke color for chart
 	marker: "circle",
+<<<<<<< HEAD
 	markerSize: 75,
 	lineThickness: 4
+=======
+	markerSize: 75	
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 };
 //All options that affect axis appearances/labels
 var axisOptions = {
@@ -48,6 +52,7 @@ var cX = null;
 var cY = null;
 var height = null;
 var height2 = null;
+<<<<<<< HEAD
 //object of strings that will be used to output the code for people to copy/paste for their own use.
 var strCode = {
 	svg: '',
@@ -59,11 +64,18 @@ var strCode = {
 	ydomain: ''
 };
 var strData = [];
+=======
+var strData = null;
+
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 var xValType = "";
 var yValType = "";
 var xValTypeChanged = false; //track when data type changes in order to reset min/max
 var yValTypeChanged = false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 //RegEx for date validation
 //var dateRE = "^((((0[13578])|([13578])|(1[02]))[\/](([1-9])|([0-2][0-9])|(3[01])))|(((0[469])|([469])|(11))[\/](([1-9])|([0-2][0-9])|(30)))|((2|02)[\/](([1-9])|([0-2][0-9]))))[\/]\d{4}$|^\d{4}$";
 
@@ -193,10 +205,17 @@ function changeLT(){
 function changeMarker(){
 	if($('#markerType').val()){
 		chartOptions.marker = $('#markerType').val();
+<<<<<<< HEAD
 	}
 	if($('#markerSize').val()){
 		chartOptions.markerSize = $('#markerSize').val();
 	}
+=======
+	}
+	if($('#markerSize').val()){
+		chartOptions.markerSize = $('#markerSize').val();
+	}
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 	chartOptions.marker = chartOptions.marker.charAt(0).toLowerCase() + chartOptions.marker.slice(1);
 	sym = d3.svg.symbol()
 			.type(chartOptions.marker)
@@ -475,11 +494,15 @@ function changeYAL(){
       	//.attr("dx", "-"+$('#ylabel').val().length+"em")
       	//.attr("text-anchor", "middle")
       	.text(axisOptions.ylbl); 
+<<<<<<< HEAD
     
    if($('#ylabel').val()){
    		focus.select('#yaxis').attr("dx", "-"+$('#ylabel').val().length+"em");
    }
     
+=======
+      	 
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
    if(axisOptions.ylblrot == 'Yes'){
    		focus.select('#ylbl')
 	   		.attr("x",-ypos)
@@ -502,6 +525,7 @@ function colorChoice(cPart, type){
 	    color: iColor,
 	    showButtons: false,
 	    change: function(){
+<<<<<<< HEAD
 		    		//set Color variable, use if statements to avoid setting colors to null when colors are changed on chart types
 		    		//	that do not support one or the other
 		    		if(type == 'Fill' || type =='Marker'){
@@ -510,6 +534,11 @@ function colorChoice(cPart, type){
 		    		if(type == 'Line'|| type =='Marker'){
 		    			chartOptions.sColor = $('#chartColorstrokeColor').spectrum("get");
 		    		}		    		
+=======
+		    		//set Color variable
+		    		chartOptions.fColor = $('#chartColorfillColor').spectrum("get");
+		    		chartOptions.sColor = $('#chartColorstrokeColor').spectrum("get");
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 		    		//Recreate data polygons
 		    		switch(type){
 		    			case 'Fill':
@@ -877,7 +906,11 @@ function createFilledLineChart(){
 	  context.append("path")
 	      .datum(data)
 	      .attr("id","fill")
+<<<<<<< HEAD
 	      .attr("fill",chartOptions.fColor)
+=======
+	      //.attr("fill",chartOptions.fColor)
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 	      .attr("d", area2);
 	      
 	  
@@ -900,7 +933,11 @@ function createLineChart(){
 	      .attr("clip-path", "url(#clip)")
 	      .attr("d", line)
 	      .attr("id","line")
+<<<<<<< HEAD
 	      .attr("stroke-width",chartOptions.lineThickness)
+=======
+	      .attr("stroke-width",4)
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
 	      .attr("stroke", chartOptions.sColor)
 	      .attr("fill","none")
 	      .on("dblclick", function(){
@@ -939,7 +976,11 @@ function createScatter(){
       .attr("transform", symXY)
       .attr("d", sym)
       .attr("stroke", chartOptions.sColor)
+<<<<<<< HEAD
       .attr("stroke-width",chartOptions.lineThickness)
+=======
+      .attr("stroke-width",4)
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
       .attr("fill",chartOptions.fColor)
       .on("dblclick", function(){
       	createPopupOptions();
@@ -955,6 +996,10 @@ function createScatter(){
       .attr("fill",chartOptions.fColor)
       .attr("stroke", chartOptions.sColor)      
       .attr("stroke-width",2);
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 0b4768f3cba047e919c8c1695d96a11e2639effe
       
       addons();
       strCode.chart = createScatter.toString();                  
