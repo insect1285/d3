@@ -15,10 +15,20 @@ function upload_file($file){
 	$allowedExts = array("csv", "txt"); //file extensions accepted
 	$temp = explode(".", $file["file"]["name"]);
 	$extension = end($temp);
-	
-	if (($file["file"]["type"] == "text/*") 
-	|| ($file["file"]["type"] == "application/vnd.ms-excel") //file types allowed
-	&& in_array($extension, $allowedExts))
+	$csv_mimetypes = array(
+		'text/csv',
+		'text/plain',
+		'application/csv',
+		'text/comma-separated-values',
+		'application/excel',
+		'application/vnd.ms-excel',
+		'application/vnd.msexcel',
+		'text/anytext',
+		'application/octet-stream',
+		'application/txt',
+	); // Files mimes allowed
+
+	if (in_array($_FILES['upload']['type'], $csv_mimetypes)) && in_array($extension, $allowedExts))
 	  {
 	  if ($file["file"]["error"] > 0)
 	    {
