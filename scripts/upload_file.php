@@ -28,7 +28,7 @@ function upload_file($file){
 		'application/txt',
 	); // Files mimes allowed
 
-	if (in_array($_FILES['upload']['type'], $csv_mimetypes)) && in_array($extension, $allowedExts))
+	if ((in_array($_FILES['file']['type'], $csv_mimetypes)) && in_array($extension, $allowedExts))
 	  {
 	  if ($file["file"]["error"] > 0)
 	    {
